@@ -1,0 +1,150 @@
+---
+title: "Pruebas en R Markdown"
+author: "ixpantia"
+date: "9/23/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(ggplot2)
+library(ggridges)
+library(testrmd)
+library(testit)
+testrmd::init()
+```
+
+## Ventas y NPS
+
+```{r datos-peligrosos, test = TRUE}
+#ventas <- read_excel("../datos/ventas-1.xlsx")
+ventas <- read_excel("../datos/ventas-2.xlsx")
+stopifnot(class(ventas$nps) == "numeric")
+```
+
+
+## Categorias del NPS 
+Miremos si podemos usar stopifnot para verificar que no hay nada diferente
+a los valores esperados en la columna categoria
+ 
+Un forma podria ser el uso de stopifnot() comparando el contenido de la 
+columna categoria
+
+```{r categorias-nps, test = TRUE}
+categorias_nps <- ventas %>% 
+  mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
+                            ifelse(nps >= 6 & nps < 9, "Neutral", 
+                                   "Promtor")))
+
+stopifnot(unique(categorias_nps$categoria) %in% 
+            c("Detractor", "Neutral", "Promotor"))
+```
+
+Porque da un error?
+
+```{r} 
+unique(categorias_nps$categoria)
+```
+
+Como vemos es porque no tomamos en cuenta los NA. Si lo hacemos la prueba pasa
+otra vez.
+
+```{r, test = TRUE}
+categorias_nps <- ventas %>% 
+  mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
+                            ifelse(nps >= 6 & nps < 9, "Neutral", 
+                                   "Promtor")))
+
+stopifnot(unique(categorias_nps$categoria) %in% 
+            c("Detractor", "Neutral", "Promotor", NA))
+```
+
+# Extendamos el calculo de las Categorias del NPS 
+# Necesitmamos una columnas nuevas
+
+```{r}
+vendedores_NPS <- ventas %>% 
+  mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
+                            ifelse(nps >= 6 & nps < 9, "Neutral", 
+                                   "Promotor"))) %>% 
+  mutate(mes = month(Fecha)) %>% 
+  group_by(`Vendedor ID`, mes) %>% 
+  summarise(total_prom = sum(str_count(categoria, "Promotor"), na.rm = TRUE),
+            total_det = sum(str_count(categoria, "Detractor"), na.rm = TRUE),
+            total = sum(!is.na(categoria))) %>% 
+  mutate(nps_promedio = ((total_prom / total) * 100) - ((total_det / total) * 100)) %>% 
+  select_all()
+
+# Tenemos los valores de NPS, pero no tenemos los nombres. Estos tenemos
+# que sacar de otro lado.
+
+vendedores_Nombres <- ventas %>%
+  select(`Vendedor Nombre`, `Vendedor Apellido`, `Vendedor ID`) %>% 
+  distinct()
+
+vendedores <- vendedores_Nombres %>% 
+  left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID"))
+```
+
+Se ve bien! 
+Pero ....
+
+```{r}
+head(vendedores, 10)
+```
+
+Ahora antes de unirlos, hagamos unas pruebas para asegurarnos de que todo
+es como lo esperamos. El paquete que vimos antes, testit tambien funciona
+muy bien con `testrmd`. 
+
+```{r, test = TRUE}
+vendedores_Nombres <- vendedores_Nombres %>% 
+  filter(!is.na(`Vendedor ID`))
+
+assert("Todos los vendedores tienen ID", 
+       !is.na(vendedores_Nombres$`Vendedor ID`))
+```
+
+# Ahora para comparar valores
+
+```{r, test = TRUE}
+vendedores <- vendedores_Nombres %>% 
+  left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID")) %>% 
+  filter(!is.nan(nps_promedio))
+```
+
+```{r, test = TRUE}
+ggplot(data = vendedores, aes(x = mes, y = nps_promedio)) + geom_violin()
+```
+
+
+## base para valores nps
+
+```{r, test = TRUE}
+nps_joy <- ventas %>% 
+  filter(!is.na(nps)) %>% 
+  group_by(`Vendedor ID`) %>% 
+  mutate(promedio = mean(nps)) %>% 
+  filter(promedio < 9) %>%
+  arrange(promedio) %>% 
+  ungroup() %>% 
+  mutate(`Vendedor ID` = factor(`Vendedor ID`, unique(`Vendedor ID`)))
+```
+
+```{r}
+ggplot(data = nps_joy, aes(x = nps, y = `Vendedor ID`, fill = `Vendedor ID`)) + 
+  geom_density_ridges() +
+  theme(axis.title.y = element_blank(),
+        legend.position='none')
+```
+
+```{r, test = TRUE}
+ggplot(data = nps_joy, aes(x = nps, y = `Vendedor ID`, fill = `Vendedor ID`)) + 
+  geom_density_ridges(stat = "binline", bins = 10, draw_baseline = FALSE) + 
+  theme(axis.title.y = element_blank(),
+        legend.position='none')
+```
