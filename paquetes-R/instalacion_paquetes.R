@@ -43,6 +43,28 @@ install.packages("paquetes/tibble_1.3.4.tar.gz",
 
 install.packages("paquetes/tidyr_0.7.1.tar.gz", 
                  repos = NULL, type = "source")
+# devtools
+
+install.packages("paquetes/devtools_1.13.3.tar.gz",
+                 repos = NULL, type = "source")
+# readxl
+
+install.packages("paquetes/readxl_1.0.0.tar.gz",
+                 repos = NULL, type = "source")
+
+# lubridate
+
+install.packages("paquetes/lubridate_1.6.0.tar.gz",
+                 repos = NULL, type = "source")
+
+# stringr
+
+install.packages("paquetes/stringr_1.2.0.tar.gz",
+                 repos = NULL, type = "source")
+# ggridges
+
+install.packages("paquetes/ggridges_0.4.1.tar.gz",
+                 repos = NULL, type = "source")
 
 # ------------------- 2. Cargar paquetes en la sesión --------------------------
 
@@ -53,3 +75,8 @@ library(purrr)
 library(dplyr)
 library(testthat)
 library(readr)
+library(devtools)
+library(readxl)
+library(lubridate)
+library(stringr)
+library(ggridges)
