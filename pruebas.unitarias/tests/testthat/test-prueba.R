@@ -1,7 +1,7 @@
 context("prueba")
 library(readxl)
 
-ventas <- read_excel("test_ventas.xlsx")
+ventas <- read_excel("tests/testthat/test_ventas.xlsx")
 
 test_that("multiplication works", {
   expect_equal(2 * 2, 4)
@@ -15,7 +15,7 @@ test_that("El archivo ventas contiene lo que esperamos", {
 })
 
 test_that("El calculo de NPS da el resultado esperado", {
-  # esta es una illustración del las "abreviaciones" (short cuts) de
+  # esta es una ilustración del las "abreviaciones" (short cuts) de
   # testthat
   valores_nps <- calcula_nps(ventas)
 

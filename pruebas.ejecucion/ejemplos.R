@@ -2,17 +2,17 @@
 # anotate a las noticias Data Latam en http://eepurl.com/cMbJK9
 
 # stop() y stopifnot() --------
-# Metodos para parar código en mitad de camino:
+# Métodos para parar código en mitad de camino:
 
 stop()
 
 stop("Este es mi propio mensaje de error")
 
-if (!2 == 3 ){
-  stop("Desde cuando 2 equivale 3?")
+if (!2 == 3 ) {
+  stop("¿Desde cuándo 2 equivale 3?")
 }
 
-if (2 == 2 ){
+if (2 == 2 ) {
   stop("Por dicha para R 2 equivale 2
         pero eso no es un error")
 }
@@ -47,7 +47,7 @@ categorias_nps <- ventas %>%
 # Miremos si podemos usar stopifnot para verificar que no hay nada diferente
 # a los valores esperados en la columna categoria
 # 
-# Un forma podria ser
+# Un forma podría ser
 stopifnot(c("Detractor", "Neutral", "Promotor", "Otro") %in% 
             c("Detractor", "Neutral", "Promotor"))
 # La otra 
@@ -60,8 +60,8 @@ stopifnot(c("Detractor", "Neutral", "Promotor") %in%
 stopifnot(unique(categorias_nps$categoria) %in% 
             c("Detractor", "Neutral", "Promotor"))
 
-# Porque da un error?
-# 
+# ¿Por qué da un error?
+
 unique(categorias_nps$categoria)
 
 # Porque no tomamos en cuenta los NA
@@ -69,13 +69,13 @@ unique(categorias_nps$categoria)
 stopifnot(unique(categorias_nps$categoria) %in% 
             c("Detractor", "Neutral", "Promotor", NA))
 
-# Ojo que  no es asi (porque no?)
+# Ojo que  no es así (¿Por qué no?)
 stopifnot(unique(categorias_nps$categoria) %in% 
             c("Detractor", "Neutral", "Promotor", "NA"))
 
 
-# Extendamos el calculo de las Categorias del NPS 
-# Necesitmamos una columnas nuevas
+# Extendamos el calculo de las Categorías del NPS 
+# Necesitmamos unas columnas nuevas
 vendedores_NPS <- ventas %>% 
   mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
                             ifelse(nps >= 6 & nps < 9, "Neutral", 
@@ -96,9 +96,9 @@ vendedores_Nombres <- ventas %>%
   distinct()
 
 vendedores <- vendedores_Nombres %>% 
-  left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID"))
+  left_join(vendedores_NPS, by = c("Vendedor ID" = "Vendedor ID"))
 
-# Se ve bien! 
+# ¡Se ve bien! 
 # Pero ....
 
 View(vendedores)
@@ -124,7 +124,7 @@ has_warning(1:2 + 1:3)
 has_error(2 - 3)
 has_error(1 + "a")
 
-# Entonces podemos exigir caracteristicas antes de unir las tablas
+# Entonces podemos exigir características antes de unir las tablas
 assert("Todos los vendedores tienen Nombre", 
        !is.na(vendedores_Nombres$`Vendedor Nombre`))
 
@@ -134,8 +134,8 @@ assert("Todos los vendedores tienen Apellido",
 assert("Todos los vendedores tienen ID", 
        !is.na(vendedores_Nombres$`Vendedor ID`))
 
-# La pregunta ahora es: Que es esencial. En este caso diría que el tener
-# Los ID completo es lo más importante, asi que tenemos que hacer algo para que
+# La pregunta ahora es: ¿Qué es esencial. En este caso diría que el tener
+# los ID completos es lo más importante, asi que tenemos que hacer algo para que
 # esta prueba pase:
 # 
 
@@ -146,12 +146,12 @@ assert("Todos los vendedores tienen ID",
        !is.na(vendedores_Nombres$`Vendedor ID`))
 
 vendedores <- vendedores_Nombres %>% 
-  left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID"))
+  left_join(vendedores_NPS, by = c("Vendedor ID" = "Vendedor ID"))
 
 # Ahora para comparar valores
 
 vendedores <- vendedores_Nombres %>% 
-  left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID")) %>% 
+  left_join(vendedores_NPS, by = c("Vendedor ID" = "Vendedor ID")) %>% 
   filter(!is.nan(nps_promedio))
 
 ggplot(data = vendedores, aes(x = mes, y = nps_promedio)) + geom_violin()
@@ -169,19 +169,19 @@ nps_joy <- ventas %>%
 ggplot(data = nps_joy, aes(x = nps, y = `Vendedor ID`, fill = `Vendedor ID`)) + 
   geom_density_ridges() +
   theme(axis.title.y = element_blank(),
-        legend.position='none')
+        legend.position = 'none')
 
 ggplot(data = nps_joy, aes(x = nps, y = `Vendedor ID`, fill = `Vendedor ID`)) + 
   geom_density_ridges(stat = "binline", bins = 10, draw_baseline = FALSE) + 
   theme(axis.title.y = element_blank(),
-        legend.position='none')
+        legend.position = 'none')
 
 # Ahora cambio los datos ----
 ventas <- read_excel("../datos/ventas-2.xlsx")
 
 
-# Como pruebo que esta correcto usando lo que vimos antes?
-# Para evitar la bomba en RStudio la siguiente prueba funciona
+# ¿Cómo pruebo que está correcto usando lo que vimos antes?
+# Para evitar la bomba en RStudio la siguiente prueba funciona:
 stopifnot(class(ventas$nps) == "numeric")
 
 
