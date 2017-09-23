@@ -1,6 +1,53 @@
 # Data Latam - Curso Profesional pruebas R
 # anotate a las noticias Data Latam en http://eepurl.com/cMbJK9
 
+# Pruebas con Print
+# 
+# 
+cuentas_y_intereses <- data.frame(
+  usuario = c("datalatam", "diegomay", "RonnyHdezM", "fransvandunne"),
+  interes = c("eventos", "Big Data", "Bioestadistica", "data")
+) 
+
+print(cuentas_y_intereses)
+
+# Ahora creamos los url para hacer las busquedas. Por ejemplo:
+# https://twitter.com/search?l=&q=data%20from%3Afransvandunne&src=typd&lang=en
+
+url_twitter <- c()
+for(usuario in cuentas_y_intereses$usuario){
+  for(interes in cuentas_y_intereses$interes) {
+    url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+                 "&src=typd&lang=en", sep = "")
+    url_twitter <- c(url_twitter, url_actual)
+    }
+}
+
+# Simplifica con print
+url_twitter <- c()
+for(usuario in cuentas_y_intereses$usuario){
+  cat(usuario, "\n")
+
+    for(interes in cuentas_y_intereses$interes) {
+     cat(interes, "\n")
+    # url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+   #                      "&src=typd&lang=en", sep = "")
+   # url_twitter <- c(url_twitter, url_actual)
+  }
+}
+
+url_twitter <- c()
+for(usuario in cuentas_y_intereses$usuario){
+  cat("Primer for loop: ", usuario, "----", "\n")
+  for(interes in cuentas_y_intereses$interes) {
+    cat("Segundo for loop: ", interes, "\n")
+    # url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+    #                      "&src=typd&lang=en", sep = "")
+    # url_twitter <- c(url_twitter, url_actual)
+  }
+}
+
+
 # stop() y stopifnot() --------
 # Metodos para parar código en mitad de camino:
 
@@ -26,6 +73,33 @@ stopifnot(2 == 2)
 stopifnot(2 == 2, "A" == "A")
 
 stopifnot(2 == 2, "A" == "A", all(1:10 < 9))
+
+
+url_twitter <- c()
+for(usuario in cuentas_y_intereses$usuario){
+  for(interes in cuentas_y_intereses$interes) {
+    url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+                          "&src=typd&lang=en", sep = "")
+     url_twitter <- c(url_twitter, url_actual)
+  }
+}
+
+stopifnot(length(url_twitter) == nrow(cuentas_y_intereses))
+
+# Ahora con correcciones
+
+url_twitter <- c()
+for(i in 1:nrow(cuentas_y_intereses)) {
+  usuario_actual <- cuentas_y_intereses$usuario[i]
+  interes_actual <- cuentas_y_intereses$interes[i]
+  
+    url_actual <- paste("https://twitter.com/search?l=&q=i",interes_actual, 
+                        "%20from%3A", usuario_actual,
+                        "&src=typd&lang=en", sep = "")
+    url_twitter <- c(url_twitter, url_actual)
+}
+
+stopifnot(length(url_twitter) == nrow(cuentas_y_intereses))
 
 
 # Ejemplo en un script -----
