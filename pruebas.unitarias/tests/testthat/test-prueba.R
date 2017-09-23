@@ -1,7 +1,7 @@
 context("prueba")
 library(readxl)
 
-ventas <- read_excel("tests/testthat/test_ventas.xlsx")
+ventas <- read_excel("test_ventas.xlsx")
 
 test_that("multiplication works", {
   expect_equal(2 * 2, 4)
@@ -23,7 +23,7 @@ test_that("El calculo de NPS da el resultado esperado", {
   expect_true(unique(valores_nps$mes) == c(5,6,7,8,4))
 
   # No funcionan bien. Pero testthat tiene compare()
-  compare(unique(valores_nps$mes),c(5,6,7,8,4))
+  compare(unique(valores_nps$mes), c(5,6,7,8,4))
 
   # lo que permite entonces:
   expect_equal(unique(valores_nps$mes),c(5,6,7,8,4))
