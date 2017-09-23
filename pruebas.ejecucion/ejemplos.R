@@ -6,7 +6,7 @@
 # 
 cuentas_y_intereses <- data.frame(
   usuario = c("datalatam", "diegomay", "RonnyHdezM", "fransvandunne"),
-  interes = c("eventos", "Big Data", "Bioestadistica", "data")
+  interes = c("episodio", "Big Data", "Bioestadistica", "data")
 ) 
 
 print(cuentas_y_intereses)
@@ -17,7 +17,7 @@ print(cuentas_y_intereses)
 url_twitter <- c()
 for(usuario in cuentas_y_intereses$usuario){
   for(interes in cuentas_y_intereses$interes) {
-    url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+    url_actual <- paste("https://twitter.com/search?l=&q=",interes, "%20from%3A", usuario,
                  "&src=typd&lang=en", sep = "")
     url_twitter <- c(url_twitter, url_actual)
     }
@@ -30,7 +30,7 @@ for(usuario in cuentas_y_intereses$usuario){
 
     for(interes in cuentas_y_intereses$interes) {
      cat(interes, "\n")
-    # url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+    # url_actual <- paste("https://twitter.com/search?l=&q=",interes, "%20from%3A", usuario,
    #                      "&src=typd&lang=en", sep = "")
    # url_twitter <- c(url_twitter, url_actual)
   }
@@ -41,7 +41,7 @@ for(usuario in cuentas_y_intereses$usuario){
   cat("Primer for loop: ", usuario, "----", "\n")
   for(interes in cuentas_y_intereses$interes) {
     cat("Segundo for loop: ", interes, "\n")
-    # url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+    # url_actual <- paste("https://twitter.com/search?l=&q=",interes, "%20from%3A", usuario,
     #                      "&src=typd&lang=en", sep = "")
     # url_twitter <- c(url_twitter, url_actual)
   }
@@ -78,7 +78,7 @@ stopifnot(2 == 2, "A" == "A", all(1:10 < 9))
 url_twitter <- c()
 for(usuario in cuentas_y_intereses$usuario){
   for(interes in cuentas_y_intereses$interes) {
-    url_actual <- paste("https://twitter.com/search?l=&q=i",interes, "%20from%3A", usuario,
+    url_actual <- paste("https://twitter.com/search?l=&q=",interes, "%20from%3A", usuario,
                           "&src=typd&lang=en", sep = "")
      url_twitter <- c(url_twitter, url_actual)
   }
@@ -93,7 +93,7 @@ for(i in 1:nrow(cuentas_y_intereses)) {
   usuario_actual <- cuentas_y_intereses$usuario[i]
   interes_actual <- cuentas_y_intereses$interes[i]
   
-    url_actual <- paste("https://twitter.com/search?l=&q=i",interes_actual, 
+    url_actual <- paste("https://twitter.com/search?l=&q=",interes_actual, 
                         "%20from%3A", usuario_actual,
                         "&src=typd&lang=en", sep = "")
     url_twitter <- c(url_twitter, url_actual)
