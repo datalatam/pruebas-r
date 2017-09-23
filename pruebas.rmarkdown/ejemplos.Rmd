@@ -31,7 +31,7 @@ stopifnot(class(ventas$nps) == "numeric")
 Miremos si podemos usar stopifnot para verificar que no hay nada diferente
 a los valores esperados en la columna categoria
  
-Un forma podria ser el uso de stopifnot() comparando el contenido de la 
+Una forma podría ser el uso de stopifnot() comparando el contenido de la 
 columna categoria
 
 ```{r categorias-nps, test = TRUE}
@@ -44,7 +44,7 @@ stopifnot(unique(categorias_nps$categoria) %in%
             c("Detractor", "Neutral", "Promotor"))
 ```
 
-Porque da un error?
+¿Por qué da un error?
 
 ```{r} 
 unique(categorias_nps$categoria)
@@ -57,14 +57,14 @@ otra vez.
 categorias_nps <- ventas %>% 
   mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
                             ifelse(nps >= 6 & nps < 9, "Neutral", 
-                                   "Promtor")))
+                                   "Promotor")))
 
 stopifnot(unique(categorias_nps$categoria) %in% 
             c("Detractor", "Neutral", "Promotor", NA))
 ```
 
-# Extendamos el calculo de las Categorias del NPS 
-# Necesitmamos una columnas nuevas
+# Extendamos el cálculo de las Categorias del NPS 
+# Necesitmamos unas columnas nuevas
 
 ```{r}
 vendedores_NPS <- ventas %>% 
@@ -79,7 +79,7 @@ vendedores_NPS <- ventas %>%
   mutate(nps_promedio = ((total_prom / total) * 100) - ((total_det / total) * 100)) %>% 
   select_all()
 
-# Tenemos los valores de NPS, pero no tenemos los nombres. Estos tenemos
+# Tenemos los valores de NPS, pero no tenemos los nombres. Estos los tenemos
 # que sacar de otro lado.
 
 vendedores_Nombres <- ventas %>%
@@ -87,7 +87,7 @@ vendedores_Nombres <- ventas %>%
   distinct()
 
 vendedores <- vendedores_Nombres %>% 
-  left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID"))
+  left_join(vendedores_NPS, by = c("Vendedor ID" = "Vendedor ID"))
 ```
 
 Se ve bien! 
