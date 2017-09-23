@@ -20,9 +20,12 @@ testrmd::init()
 
 ## Ventas y NPS
 
-```{r datos-peligrosos, test = TRUE}
-#ventas <- read_excel("../datos/ventas-1.xlsx")
-ventas <- read_excel("../datos/ventas-2.xlsx")
+```{r carga-datos}
+ventas <- read_excel("../datos/ventas-1.xlsx")
+#ventas <- read_excel("../datos/ventas-2.xlsx")
+```
+
+```{r prueba si hay datos peligrosos, test = TRUE}
 stopifnot(class(ventas$nps) == "numeric")
 ```
 
@@ -34,12 +37,14 @@ a los valores esperados en la columna categoria
 Una forma podría ser el uso de stopifnot() comparando el contenido de la 
 columna categoria
 
-```{r categorias-nps, test = TRUE}
+```{r categorias-nps}
 categorias_nps <- ventas %>% 
   mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
                             ifelse(nps >= 6 & nps < 9, "Neutral", 
                                    "Promtor")))
+```
 
+```{r prueba categorias-nps, test = TRUE}
 stopifnot(unique(categorias_nps$categoria) %in% 
             c("Detractor", "Neutral", "Promotor"))
 ```
@@ -53,12 +58,14 @@ unique(categorias_nps$categoria)
 Como vemos es porque no tomamos en cuenta los NA. Si lo hacemos la prueba pasa
 otra vez.
 
-```{r, test = TRUE}
+```{r}
 categorias_nps <- ventas %>% 
   mutate(categoria = ifelse(nps >= 0 & nps < 7, "Detractor",
                             ifelse(nps >= 6 & nps < 9, "Neutral", 
                                    "Promotor")))
+```
 
+```{r, test = TRUE}
 stopifnot(unique(categorias_nps$categoria) %in% 
             c("Detractor", "Neutral", "Promotor", NA))
 ```
@@ -101,30 +108,32 @@ Ahora antes de unirlos, hagamos unas pruebas para asegurarnos de que todo
 es como lo esperamos. El paquete que vimos antes, testit tambien funciona
 muy bien con `testrmd`. 
 
-```{r, test = TRUE}
+```{r}
 vendedores_Nombres <- vendedores_Nombres %>% 
   filter(!is.na(`Vendedor ID`))
+```
 
+```{r, test = TRUE}
 assert("Todos los vendedores tienen ID", 
        !is.na(vendedores_Nombres$`Vendedor ID`))
 ```
 
 # Ahora para comparar valores
 
-```{r, test = TRUE}
+```{r}
 vendedores <- vendedores_Nombres %>% 
   left_join(vendedores_NPS, by = c("Vendedor ID"="Vendedor ID")) %>% 
   filter(!is.nan(nps_promedio))
 ```
 
-```{r, test = TRUE}
+```{r}
 ggplot(data = vendedores, aes(x = mes, y = nps_promedio)) + geom_violin()
 ```
 
 
 ## base para valores nps
 
-```{r, test = TRUE}
+```{r}
 nps_joy <- ventas %>% 
   filter(!is.na(nps)) %>% 
   group_by(`Vendedor ID`) %>% 
@@ -142,7 +151,7 @@ ggplot(data = nps_joy, aes(x = nps, y = `Vendedor ID`, fill = `Vendedor ID`)) +
         legend.position='none')
 ```
 
-```{r, test = TRUE}
+```{r}
 ggplot(data = nps_joy, aes(x = nps, y = `Vendedor ID`, fill = `Vendedor ID`)) + 
   geom_density_ridges(stat = "binline", bins = 10, draw_baseline = FALSE) + 
   theme(axis.title.y = element_blank(),
