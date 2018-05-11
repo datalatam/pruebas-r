@@ -1,5 +1,7 @@
 # Mejora tu código R con pruebas automáticas
 
+Estos son los ejemplos del [Curso Profesional: Mejora tu código R con pruebas automáticas](https://www.meetup.com/DataLatam/events/243103833/).
+
 Antes de comenzar con los ejemplos por favor verifica lo siguiente:
 
 1. Que tienes una versión de R actualizada. Vamos a trabajar con la version 3.4.1. 
